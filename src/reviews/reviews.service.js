@@ -50,7 +50,7 @@ function destroy(reviewId) {
 function update(updatedReview) {
   return knex("reviews as r")
     .where({ review_id: updatedReview.review_id })
-    .update(updatedReview, "*");
+    .update(updatedReview);
 }
 
 module.exports = {

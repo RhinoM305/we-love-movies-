@@ -10,15 +10,23 @@ async function reviewExists(req, res, next) {
   }
   return next({
     status: 404,
-    message: `/cannot be found/i`,
+    message: "Review cannot be found.",
   });
 }
 
-function hasData(req, res, next) {
-  if (req.body.data) {
+async function movieExists(req, res, next) {
+  const { movieId } = req.params;
+
+  const movie = await service.read(movieId);
+
+  if (movie) {
+    res.locals.movie = movie;
     return next();
   }
-  next({ status: 400, message: "body must have data property" });
+  return next({
+    status: 404,
+    message: "Movie cannot be found.",
+  });
 }
 
 async function movieReviews(req, res) {
@@ -44,7 +52,7 @@ async function update(req, res) {
 }
 
 module.exports = {
-  delete: [reviewExists, destroy],
-  movieReviews,
-  update: [reviewExists, update],
+  delete: [reviewExists, asyncErrorBoundary(destroy)],
+  movieReviews: [asyncErrorBoundary(movieReviews)],
+  update: [reviewExists, asyncErrorBoundary(update)],
 };

@@ -14,6 +14,6 @@ async function read(req, res) {
   res.json({ data });
 }
 module.exports = {
-  read,
-  list,
+  read: asyncErrorBoundary(read),
+  list: asyncErrorBoundary(list),
 };

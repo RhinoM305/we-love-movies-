@@ -12,7 +12,7 @@ async function movieExists(req, res, next) {
   }
   return next({
     status: 404,
-    message: `Movie not found.`,
+    message: "Movie cannot be found.",
   });
 }
 
@@ -31,5 +31,5 @@ async function read(req, res) {
 
 module.exports = {
   read: [asyncErrorBoundary(movieExists), asyncErrorBoundary(read)],
-  list,
+  list: [asyncErrorBoundary(list)],
 };
